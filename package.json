@@ -2,7 +2,7 @@
   "name": "claude-sound",
   "displayName": "Claude Sound",
   "description": "Play an audio cue when Claude Code finishes responding.",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "publisher": "coyaac",
   "repository": {
     "type": "git",
