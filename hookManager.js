@@ -16,7 +16,8 @@ function buildCommand(audioPath) {
     'if ($p.NaturalDuration.HasTimeSpan) { Start-Sleep -Milliseconds ([int]$p.NaturalDuration.TimeSpan.TotalMilliseconds + 300) } else { Start-Sleep -Milliseconds 3000 };',
     '$p.Stop(); $p.Close();'
   ].join(' ');
-  return `powershell -NoProfile -Command "${script}" # ${MARKER}`;
+  const encoded = Buffer.from(script, 'utf16le').toString('base64');
+  return `powershell -NoProfile -EncodedCommand ${encoded} # ${MARKER}`;
 }
 
 function isManagedCommand(command) {
