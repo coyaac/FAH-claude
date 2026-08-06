@@ -11,7 +11,7 @@ function buildCommand(audioPath) {
 }
 
 function isManagedCommand(command) {
-  return typeof command === 'string' && command.includes(MARKER);
+  return typeof command === 'string' && command.trim().endsWith(`# ${MARKER}`);
 }
 
 function installHook(settings, audioPath) {
