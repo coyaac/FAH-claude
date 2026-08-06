@@ -57,3 +57,9 @@ test('buildCommand escapes single quotes in the audio path', () => {
   const command = buildCommand("C:/it's/done.mp3");
   assert.ok(command.includes("it''s"));
 });
+
+test('a user command that only mentions the marker is not managed', () => {
+  const before = { hooks: { Stop: [{ hooks: [{ type: 'command', command: 'echo claude-sound-hook is neat' }] }] } };
+  assert.equal(isEnabled(before), false);
+  assert.deepEqual(uninstallHook(before), before);
+});

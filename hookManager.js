@@ -7,7 +7,16 @@ function escapeForPowerShell(str) {
 
 function buildCommand(audioPath) {
   const escaped = escapeForPowerShell(audioPath);
-  return `powershell -NoProfile -Command "(New-Object Media.SoundPlayer '${escaped}').PlaySync()" # ${MARKER}`;
+  const script = [
+    'Add-Type -AssemblyName PresentationCore;',
+    '$p = New-Object System.Windows.Media.MediaPlayer;',
+    `$p.Open([Uri]'${escaped}');`,
+    'for ($i=0; $i -lt 50 -and -not $p.NaturalDuration.HasTimeSpan; $i++) { Start-Sleep -Milliseconds 100 };',
+    '$p.Play();',
+    'if ($p.NaturalDuration.HasTimeSpan) { Start-Sleep -Milliseconds ([int]$p.NaturalDuration.TimeSpan.TotalMilliseconds + 300) } else { Start-Sleep -Milliseconds 3000 };',
+    '$p.Stop(); $p.Close();'
+  ].join(' ');
+  return `powershell -NoProfile -Command "${script}" # ${MARKER}`;
 }
 
 function isManagedCommand(command) {
