@@ -1,6 +1,7 @@
 .vscode/**
 test/**
 docs/**
+.superpowers/**
 .gitignore
 .vscodeignore
 *.vsix
