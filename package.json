@@ -1,0 +1,36 @@
+{
+  "name": "claude-sound",
+  "displayName": "Claude Sound",
+  "description": "Play an audio cue when Claude Code finishes responding.",
+  "version": "0.0.1",
+  "publisher": "coyaac",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/coyaac/FAH-claude.git"
+  },
+  "engines": {
+    "vscode": "^1.74.0"
+  },
+  "categories": ["Other"],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      { "command": "claudeSound.enable", "title": "Claude Sound: Enable" },
+      { "command": "claudeSound.disable", "title": "Claude Sound: Disable" },
+      { "command": "claudeSound.chooseSoundFile", "title": "Claude Sound: Choose Sound File" }
+    ],
+    "configuration": {
+      "title": "Claude Sound",
+      "properties": {
+        "claudeSound.audioFile": {
+          "type": "string",
+          "default": "",
+          "description": "Absolute path to the audio file to play when Claude Code finishes. Empty uses the bundled default sound."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "test": "node --test test/"
+  }
+}
