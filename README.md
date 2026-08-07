@@ -1,85 +1,90 @@
 # Claude Sound
 
-Plays an audio file whenever [Claude Code](https://claude.com/claude-code)
-finishes responding, by installing a Claude Code `Stop` hook. Works no
-matter which terminal launched `claude` — Antigravity, VS Code, or
-standalone — because the hook lives in Claude Code's own config, not in the
-editor.
+Reproduce un archivo de audio cada vez que [Claude Code](https://claude.com/claude-code)
+termina de responder, instalando un hook `Stop` de Claude Code. Funciona sin
+importar qué terminal haya lanzado `claude` — Antigravity, VS Code, o
+standalone — porque el hook vive en la configuración propia de Claude Code,
+no en el editor.
 
-**Requirements:** Windows (the hook plays audio via PowerShell/WPF), Claude
-Code installed, and VS Code or Antigravity as the editor.
+**Requisitos:** Windows (el hook reproduce audio vía PowerShell/WPF), Claude
+Code instalado, y VS Code o Antigravity como editor.
 
-## Installing
+## Instalación
 
-1. Get `claude-sound-0.0.2.vsix` (someone sends you the file, or you build
-   it yourself — see [Building it yourself](#building-it-yourself) below).
-2. In VS Code or Antigravity: `Ctrl+Shift+P` → **"Extensions: Install from
-   VSIX..."** → pick the file.
+1. Conseguí `claude-sound-0.0.2.vsix` (alguien te pasa el archivo, o lo
+   compilás vos mismo — ver [Compilarlo vos mismo](#compilarlo-vos-mismo)
+   más abajo).
+2. En VS Code o Antigravity: `Ctrl+Shift+P` → **"Extensions: Install from
+   VSIX..."** → elegí el archivo.
 3. `Ctrl+Shift+P` → **"Claude Sound: Enable"**.
 
-That's it — open a terminal, run `claude`, send it a prompt, and you'll
-hear a sound when it finishes.
+Listo — abrí una terminal, corré `claude`, mandale un prompt, y vas a
+escuchar un sonido cuando termine.
 
-## Commands
+## Comandos
 
-Open all of these with `Ctrl+Shift+P`:
+Abrí todos estos con `Ctrl+Shift+P`:
 
-- **Claude Sound: Enable** — installs the hook. Shows a confirmation
-  message when done.
-- **Claude Sound: Disable** — removes it.
-- **Claude Sound: Choose Sound File** — pick your own `.mp3`/`.wav` instead
-  of the bundled sound. If the hook is already enabled, it starts using the
-  new file immediately.
+- **Claude Sound: Enable** — instala el hook. Muestra un mensaje de
+  confirmación al terminar.
+- **Claude Sound: Disable** — lo elimina.
+- **Claude Sound: Choose Sound File** — elegí tu propio `.mp3`/`.wav` en
+  lugar del sonido incluido. Si el hook ya está habilitado, empieza a usar
+  el nuevo archivo inmediatamente.
 
-## Updating / reinstalling
+## Actualizar / reinstalar
 
-The extension host does **not** replace files if you reinstall the exact
-same version — it silently no-ops. If you're rebuilding from source and
-testing changes, bump the `version` in `package.json` before repackaging,
-or uninstall the extension first.
+El extension host **no** reemplaza los archivos si reinstalás exactamente
+la misma versión — no hace nada silenciosamente. Si estás recompilando
+desde el código fuente y probando cambios, subí el `version` en
+`package.json` antes de reempaquetar, o desinstalá la extensión primero.
 
-The hook also points at this extension's install directory, which is
-version-pinned. After updating to a newer version, re-run **Claude Sound:
-Enable** to repoint the hook at the new install path. Before uninstalling
-the extension entirely, run **Claude Sound: Disable** first — otherwise the
-hook is left behind in `~/.claude/settings.json` and will start failing on
-every Claude Code response, with no UI left to remove it (you'd have to
-edit that file by hand).
+El hook también apunta al directorio de instalación de esta extensión, que
+está fijado por versión. Después de actualizar a una versión más nueva,
+volvé a correr **Claude Sound: Enable** para redirigir el hook a la nueva
+ruta de instalación. Antes de desinstalar la extensión por completo, corré
+**Claude Sound: Disable** primero — de lo contrario el hook queda
+abandonado en `~/.claude/settings.json` y va a empezar a fallar en cada
+respuesta de Claude Code, sin ninguna interfaz para sacarlo (tendrías que
+editar ese archivo a mano).
 
-## Troubleshooting
+## Solución de problemas
 
-**No sound plays:**
-- Confirm the hook is actually installed: open `~/.claude/settings.json`
-  and look for a `hooks.Stop` entry containing `claude-sound-hook`.
-- Confirm your system volume/output device works at all (test with any
-  other sound).
-- If you just installed an update, re-run **Enable** — see "Updating"
-  above.
+**No suena nada:**
+- Confirmá que el hook esté realmente instalado: abrí
+  `~/.claude/settings.json` y buscá una entrada `hooks.Stop` que contenga
+  `claude-sound-hook`.
+- Confirmá que el volumen/dispositivo de salida de tu sistema funcione (
+  probá con cualquier otro sonido).
+- Si acabás de instalar una actualización, volvé a correr **Enable** — ver
+  "Actualizar" más arriba.
 
-**A PowerShell/parse error appears after Claude Code stops:** this usually
-means the hook that fired is stale (an older, broken version). Run
-**Disable** then **Enable** again to reinstall a fresh one, and make sure
-you're on the latest `.vsix` (see "Updating" above — same-version
-reinstalls don't take effect).
+**Aparece un error de PowerShell/parseo después de que Claude Code
+termina:** normalmente esto significa que el hook que se disparó es viejo
+(una versión anterior y rota). Corré **Disable** y después **Enable** de
+nuevo para reinstalar uno nuevo, y asegurate de estar usando el último
+`.vsix` (ver "Actualizar" más arriba — reinstalar la misma versión no
+tiene efecto).
 
-## Sharing this with someone else
+## Compartir esto con alguien más
 
-The `.vsix` file is the whole distributable — just send it to them
-(email, USB, chat, whatever) along with this README. They install it the
-same way: **"Extensions: Install from VSIX..."**, then run **Enable**. No
-build step, no account, no marketplace needed.
+El archivo `.vsix` es todo lo distribuible — simplemente enviáselo (email,
+USB, chat, lo que sea) junto con este README. Lo instalan de la misma
+manera: **"Extensions: Install from VSIX..."**, y después corren
+**Enable**. Sin paso de compilación, sin cuenta, sin marketplace
+necesario.
 
-## Building it yourself
+## Compilarlo vos mismo
 
-No compiler or bundler involved — it's plain JavaScript. From the project
-root:
+No hay compilador ni bundler de por medio — es JavaScript plano. Desde la
+raíz del proyecto:
 
 ```bash
 npx @vscode/vsce package
 ```
 
-This produces `claude-sound-<version>.vsix` in the current directory. Run
-the test suite first if you're changing `hookManager.js`:
+Esto genera `claude-sound-<version>.vsix` en el directorio actual. Corré
+la suite de tests primero si estás modificando `hookManager.js`:
 
 ```bash
 npm test
